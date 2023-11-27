@@ -1,1 +1,3 @@
 # ROS-DBSCAN
+
+We start here...
