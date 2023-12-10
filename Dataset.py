@@ -2,6 +2,7 @@
 from collections import namedtuple
 import numpy as np
 from Style import Configure as Conf
+import pandas as pd
 ROWS_INDEX = 0
 COLOMUNS_INDEX = 1
 
@@ -143,6 +144,37 @@ class Datasets:
     @staticmethod
     def __get_filename_from_path(path):
         return path.split('/')[-1]
+
+    def convert_f_concat_t_datasets(self, Xdf, Ydf):
+        count = 0
+        trainings, positives, negatives = self.get_datasets()
+        new_trainings_dataset = []
+        new_trainings_predicts = []
+        for train in trainings:
+            dataset = Xdf.iloc[count:train.shape[0] + count, :]
+            predicts = Ydf[count:train.shape[0] + count]
+            new_trainings_dataset.append(dataset)
+            new_trainings_predicts.append(predicts)
+            count += train.shape[0]
+        new_positives_dataset = []
+        new_positives_predicts = []
+        for pos in positives:
+            dataset = Xdf.iloc[count:pos.shape[0] + count, :]
+            predicts = Ydf[count:pos.shape[0] + count]
+            new_positives_dataset.append(dataset)
+            new_positives_predicts.append(predicts)
+            count += pos.shape[0]
+        new_negatives_dataset = []
+        new_neggatives_predicts = []
+        for neg in negatives:
+            dataset = Xdf.iloc[count:neg.shape[0] + count, :]
+            predicts = Ydf[count:neg.shape[0] + count]
+            new_negatives_dataset.append(dataset)
+            new_neggatives_predicts.append(predicts)
+            count += neg.shape[0]
+        self.update_predictions(new_trainings_predicts, new_positives_predicts, new_neggatives_predicts)
+        self.set_datasets(new_trainings_dataset, new_positives_dataset, new_negatives_dataset)
+        return self
 
     def __str__(self):
         def get_dir_path(path):
