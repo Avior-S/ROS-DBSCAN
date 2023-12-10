@@ -17,7 +17,7 @@ def find_eps(x_train, min_pnts):
     # plt.show()
     kneedle = KneeLocator(range(1, len(distances) + 1),  # x values
                           distances,  # y values
-                          S=0.5,  # parameter suggested from paper
+                          S=0,  # parameter suggested from paper
                           curve="convex",  # parameter from figure
                           direction="increasing")  # parameter from figure
     # kneedle.plot_knee_normalized()

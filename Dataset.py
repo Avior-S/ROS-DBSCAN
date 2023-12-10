@@ -83,6 +83,12 @@ class Datasets:
         if negatives_preds:
             self.negatives_preds = DataPred(self.negatives_preds.paths, self.negatives_preds.datasets, negatives_preds)
 
+    def get_copied_datasets(self):
+        trainings = [df.copy() for df in self.trainings_preds.datasets]
+        positives = [df.copy() for df in self.positives_preds.datasets]
+        negatives = [df.copy() for df in self.negatives_preds.datasets]
+        return trainings, positives, negatives
+
     def get_datasets(self):
         trainings = self.trainings_preds.datasets
         positives = self.positives_preds.datasets

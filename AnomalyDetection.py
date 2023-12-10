@@ -32,7 +32,7 @@ def normalization(datasets):
 
 # The important features are the ones that influence more the components and thus,
 # have a large absolute value/score on the component.
-def most_influence_feature_by_pca(datasets, n=30):
+def most_influence_feature_by_pca(datasets, n=25):
     trainings, positives, negatives = datasets
     t_df = pd.concat(trainings, ignore_index=True)
     initial_feature_names = t_df.columns
@@ -58,10 +58,10 @@ def topic_drop(datasets, topics=None):
     if topics is None:
         topics = []
     trainings, positives, negatives = datasets
-    drp_training = list(map(lambda df: df.drop(topics, axis=1), trainings))
-    drp_positive = list(map(lambda df: df.drop(topics, axis=1), positives))
-    drp_negative = list(map(lambda df: df.drop(topics, axis=1), negatives))
-    return drp_training, drp_positive, drp_negative
+    drp_trainings = list(map(lambda df: df.drop(topics, axis=1), trainings))
+    drp_positives = list(map(lambda df: df.drop(topics, axis=1), positives))
+    drp_negatives = list(map(lambda df: df.drop(topics, axis=1), negatives))
+    return drp_trainings, drp_positives, drp_negatives
 
 
 def topics_filter(datasets, topics=None):
@@ -88,7 +88,17 @@ def turtlebot3_mic_topics():
     return ['linear velocity x', 'linear velocity y', 'angular velocity z']
 
 
-def predictions_information(datasets_preds, alpha=0.95):
+def find_max_longest_sequence(trainings_names, trainings_preds, alpha=0.95):
+    longests = []
+    for f, y_pred in zip(trainings_names, trainings_preds):
+        longest = M.Measurements.longest_sequence(y_pred, Conf.NEGATIVE_LABEL)
+        longests.append(longest)
+    longests.sort()
+    max_longest = longests[int(round(len(longests) * alpha)) - 1]
+    return max_longest
+
+
+def predictions_information(datasets_preds):
     def get_acc_info(title, paths_preds, pred_value, max_longest):
         # global an
         ans = "------------------------ %s ------------------------\n" % (title,)
@@ -122,12 +132,7 @@ def predictions_information(datasets_preds, alpha=0.95):
     trainings_preds, positives_preds, negatives_preds = datasets_preds.get_predictions()
     trainings_names, positives_names, negatives_names = datasets_preds.get_names()
     ans = ""
-    longests = []
-    for f, y_pred in zip(trainings_names, trainings_preds):
-        longest = M.Measurements.longest_sequence(y_pred, Conf.NEGATIVE_LABEL)
-        longests.append(longest)
-    longests.sort()
-    max_longest = longests[int(round(len(longests) * alpha)) - 1]
+    max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
     print("max threshold " + str(max_longest))
     ans += get_acc_info("training sets", zip(trainings_names, trainings_preds), Conf.POSITIVE_LABEL, max_longest) + "\n"
     ans += get_acc_info("positive sets", zip(positives_names, positives_preds), Conf.POSITIVE_LABEL, max_longest) + "\n"
@@ -135,14 +140,77 @@ def predictions_information(datasets_preds, alpha=0.95):
     return ans
 
 
+def dict_sum_preds(multi_paths_preds, max_longest, dict_preds = {}):
+    for paths_preds in multi_paths_preds:
+        for f, y_pred in paths_preds:
+            if f not in dict_preds:
+                dict_preds[f] = 0
+            warning = M.Measurements.count_warnings(y_pred, Conf.NEGATIVE_LABEL, max_longest + 1)
+            if warning > 0:
+                dict_preds[f] += 1
+    return dict_preds
+
+
+def sum_result(dict):
+    tmp = "not exist file"
+    count = 0
+    anomaly_count = 0
+    for key in dict.keys():
+        if tmp not in key:
+            print(tmp)
+            print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+            count = 0
+            anomaly_count = 0
+            tmp = key[:-6]
+        count += 1
+        if dict[key] > 0:
+            anomaly_count += 1
+    print(tmp)
+    print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+
+
 d = DS.Datasets("data/real_panda/normal/", "data/real_panda/test/")
-dfs = d.get_datasets()
-topics = panda_mic_topics()
-flt_dfs = topics_filter(dfs, topics)
-dfs, n_dfs = run_dbscan_n_predict(flt_dfs)
+mic_dfs = d.get_copied_datasets()
+# mic_dfs = d.
+mic_topics = panda_mic_topics()
+flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
+norm_flt_mic_dfs = normalization(flt_mic_dfs)
+dfs, n_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
 d.update_predictions(n_dfs[0],n_dfs[1],n_dfs[2])
 print(predictions_information(d))
-# print(flt_dfs)
+trainings_preds, positives_preds, negatives_preds = d.get_predictions()
+trainings_names, positives_names, negatives_names = d.get_names()
+multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
+                     zip(negatives_names, negatives_preds)]
+max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
+dict_preds= dict_sum_preds(multi_paths_preds, max_longest)
+print("summarize Result for Mic features:")
+sum_result(dict_preds)
+
+# Macro Anomaly Detection
+print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
+mac_dfs = d.get_copied_datasets()
+d_mac_dfs = topic_drop(mac_dfs, mic_topics)
+mac_topics = most_influence_feature_by_pca(d_mac_dfs)
+flt_d_mac_dfs = topics_filter(d_mac_dfs, mac_topics)
+dfs, n_dfs = run_dbscan_n_predict(flt_d_mac_dfs)
+d.update_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+print(predictions_information(d))
+trainings_preds, positives_preds, negatives_preds = d.get_predictions()
+trainings_names, positives_names, negatives_names = d.get_names()
+multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
+                     zip(negatives_names, negatives_preds)]
+max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
+dict_preds2= dict_sum_preds(multi_paths_preds, max_longest)
+print("summarize Result for Macro features:")
+sum_result(dict_preds2)
+
+for key in dict_preds.keys():
+    dict_preds[key] += dict_preds2[key]
+
+print("Union Result:")
+sum_result(dict_preds)
+# # print(flt_dfs)
 # no_nan_dfs = removes_nan(dfs)
 # n_dfs = normalization(no_nan_dfs)
 # most_influence_feature = most_influence_feature_by_pca(n_dfs)
