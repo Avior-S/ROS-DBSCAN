@@ -34,9 +34,9 @@ def normalization(datasets):
 # have a large absolute value/score on the component.
 def most_influence_feature_by_pca(datasets, n=25):
     trainings, positives, negatives = datasets
-    t_df = pd.concat(trainings, ignore_index=True)
-    initial_feature_names = t_df.columns
-    dic = dict.fromkeys(range(0, t_df.shape[1]), 0)
+    # t_df = pd.concat(trainings, ignore_index=True)
+    initial_feature_names = trainings[0].columns
+    dic = dict.fromkeys(range(0, trainings[0].shape[1]), 0)
     for training in trainings:
         pca = PCA(n_components=n)
         pca = pca.fit(training)
@@ -54,13 +54,17 @@ def most_influence_feature_by_pca(datasets, n=25):
     return most_important_names
 
 
-def topic_drop(datasets, topics=None):
+def topic_drop(datasets, topics=None, st=None):
     if topics is None:
         topics = []
     trainings, positives, negatives = datasets
     drp_trainings = list(map(lambda df: df.drop(topics, axis=1), trainings))
     drp_positives = list(map(lambda df: df.drop(topics, axis=1), positives))
     drp_negatives = list(map(lambda df: df.drop(topics, axis=1), negatives))
+    if st:
+        drp_trainings = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_trainings))
+        drp_positives = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_positives))
+        drp_negatives = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_negatives))
     return drp_trainings, drp_positives, drp_negatives
 
 
@@ -140,7 +144,7 @@ def predictions_information(datasets_preds):
     return ans
 
 
-def dict_sum_preds(multi_paths_preds, max_longest, dict_preds = {}):
+def dict_sum_preds(multi_paths_preds, max_longest, dict_preds={}):
     for paths_preds in multi_paths_preds:
         for f, y_pred in paths_preds:
             if f not in dict_preds:
@@ -157,8 +161,9 @@ def sum_result(dict):
     anomaly_count = 0
     for key in dict.keys():
         if tmp not in key:
-            print(tmp)
-            print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+            if not count == 0:
+                print(tmp)
+                print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
             count = 0
             anomaly_count = 0
             tmp = key[:-6]
@@ -169,47 +174,53 @@ def sum_result(dict):
     print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
 
 
-d = DS.Datasets("data/real_panda/normal/", "data/real_panda/test/")
-mic_dfs = d.get_copied_datasets()
-# mic_dfs = d.
+d = DS.Datasets("data/real_panda/normal/", "data/real_panda/abnormal/")
+
 mic_topics = panda_mic_topics()
+
+mic_dfs = d.get_copied_datasets()
 flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
 norm_flt_mic_dfs = normalization(flt_mic_dfs)
 dfs, n_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
-d.update_predictions(n_dfs[0],n_dfs[1],n_dfs[2])
+d.set_predictions(n_dfs[0],n_dfs[1],n_dfs[2])
 print(predictions_information(d))
 trainings_preds, positives_preds, negatives_preds = d.get_predictions()
 trainings_names, positives_names, negatives_names = d.get_names()
 multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
                      zip(negatives_names, negatives_preds)]
 max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-dict_preds= dict_sum_preds(multi_paths_preds, max_longest)
+mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest)
 print("summarize Result for Mic features:")
-sum_result(dict_preds)
+sum_result(mic_dict_preds)
 
 # Macro Anomaly Detection
 print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
 mac_dfs = d.get_copied_datasets()
-d_mac_dfs = topic_drop(mac_dfs, mic_topics)
-mac_topics = most_influence_feature_by_pca(d_mac_dfs)
-flt_d_mac_dfs = topics_filter(d_mac_dfs, mac_topics)
-dfs, n_dfs = run_dbscan_n_predict(flt_d_mac_dfs)
-d.update_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+n_d_mac_dfs = normalization(d_mac_dfs)
+mac_topics = most_influence_feature_by_pca(n_d_mac_dfs)
+flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
+dfs, n_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
+d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
 print(predictions_information(d))
 trainings_preds, positives_preds, negatives_preds = d.get_predictions()
 trainings_names, positives_names, negatives_names = d.get_names()
 multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
                      zip(negatives_names, negatives_preds)]
 max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-dict_preds2= dict_sum_preds(multi_paths_preds, max_longest)
+mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
 print("summarize Result for Macro features:")
-sum_result(dict_preds2)
+sum_result(mac_dict_preds)
 
-for key in dict_preds.keys():
-    dict_preds[key] += dict_preds2[key]
 
-print("Union Result:")
-sum_result(dict_preds)
+
+
+
+for key in mic_dict_preds.keys():
+    mic_dict_preds[key] += mac_dict_preds[key]
+
+print("\n\nUnion Result:")
+sum_result(mic_dict_preds)
 # # print(flt_dfs)
 # no_nan_dfs = removes_nan(dfs)
 # n_dfs = normalization(no_nan_dfs)
