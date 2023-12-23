@@ -85,7 +85,7 @@ def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
             longests.append(longest)
         longests.sort()
         print(longests)
-        if(len([i for i in longests if i>6]) > len(longests) * 0.15):
+        if(len([i for i in longests if i>7]) > len(longests) * 0.15):
             my_eps += 0.04
         else:
             eps_calibration = False
