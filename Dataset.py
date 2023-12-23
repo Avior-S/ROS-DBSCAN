@@ -95,6 +95,26 @@ class Datasets:
         negatives = self.negatives_preds.datasets
         return trainings, positives, negatives
 
+
+    def find_similar_columns_in_training(self):
+        trainings, positives, negatives = self.get_datasets()
+        all_trn = pd.concat(trainings, join='inner')
+        all_pos = pd.concat(positives, join='inner')
+        all_neg = pd.concat(negatives, join='inner')
+        all = pd.concat([all_trn, all_pos, all_neg], join='inner')
+        return all.columns
+
+    def filter_by_columns(self, columns):
+        trainings = self.trainings_preds.datasets
+        positives = self.positives_preds.datasets
+        negatives = self.negatives_preds.datasets
+        flt_training = list(map(lambda df: df[columns], trainings))
+        flt_positive = list(map(lambda df: df[columns], positives))
+        flt_negative = list(map(lambda df: df[columns], negatives))
+        self.set_datasets(flt_training, flt_positive, flt_negative)
+
+
+
     def set_datasets(self,training_datasets, positive_datasets, negative_datasets):
         self.trainings_preds = DataPred(self.trainings_preds.paths, training_datasets, self.trainings_preds.predictions)
         self.positives_preds = DataPred(self.positives_preds.paths, positive_datasets, self.positives_preds.predictions)

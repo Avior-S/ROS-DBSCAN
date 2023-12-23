@@ -7,146 +7,8 @@
     <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght13.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght14.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght15.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght16.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght17.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght18.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/change_obj_weight/panda_change_wieght9.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack13.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack14.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack15.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/gripper_attack/panda_gripper_attack9.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con13.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con14.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con15.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con16.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con17.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/low_net_connection/panda_low_net_con9.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_panda/test/miss_bubble/panda_miss_bubble9.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal13.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal14.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal15.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal16.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal17.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal18.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal19.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal20.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal21.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal22.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal23.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal24.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal25.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal26.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal27.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal28.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal29.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal30.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/real_turtlebot3/normal/real_turtle_normal9.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda13.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda14.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda15.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda16.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda17.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda18.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda19.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda20.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_panda/normal/norm_sim_panda9.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal10.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal11.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal12.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal13.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal14.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal15.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal16.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal17.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal18.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal19.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal20.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal21.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal22.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal23.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal24.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal25.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal26.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal27.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal28.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal4.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal5.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal6.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal7.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal8.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/sim_turtlebot3/normal/sim_normal9.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DBSCAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/DBSCAN.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dataset.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -299,7 +161,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1702237703868</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL‎-00010" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1703093318137</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL‎-00010" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1703093318137</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -336,18 +206,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetection.py</url>
-          <line>213</line>
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetection.py</url>
-          <line>202</line>
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

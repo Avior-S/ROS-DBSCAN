@@ -99,6 +99,8 @@ def find_max_longest_sequence(trainings_names, trainings_preds, alpha=0.95):
         longests.append(longest)
     longests.sort()
     max_longest = longests[int(round(len(longests) * alpha)) - 1]
+    print(longests)
+    print("max:    " + str(max_longest))
     return max_longest
 
 
@@ -174,16 +176,19 @@ def sum_result(dict):
     print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
 
 
-d = DS.Datasets("data/real_panda/normal/", "data/real_panda/abnormal/")
+scenario = 'sim_turtlebot3'
+d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/")
 
-mic_topics = panda_mic_topics()
-
+similar_columns = d.find_similar_columns_in_training()
+d.filter_by_columns(similar_columns)
+# mic_topics = panda_mic_topics()
+mic_topics = turtlebot3_mic_topics()
 mic_dfs = d.get_copied_datasets()
 flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
 norm_flt_mic_dfs = normalization(flt_mic_dfs)
 dfs, n_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
 d.set_predictions(n_dfs[0],n_dfs[1],n_dfs[2])
-print(predictions_information(d))
+# print(predictions_information(d))
 trainings_preds, positives_preds, negatives_preds = d.get_predictions()
 trainings_names, positives_names, negatives_names = d.get_names()
 multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
@@ -202,7 +207,7 @@ mac_topics = most_influence_feature_by_pca(n_d_mac_dfs)
 flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
 dfs, n_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
 d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
-print(predictions_information(d))
+# print(predictions_information(d))
 trainings_preds, positives_preds, negatives_preds = d.get_predictions()
 trainings_names, positives_names, negatives_names = d.get_names()
 multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
@@ -211,10 +216,6 @@ max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
 mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
 print("summarize Result for Macro features:")
 sum_result(mac_dict_preds)
-
-
-
-
 
 for key in mic_dict_preds.keys():
     mic_dict_preds[key] += mac_dict_preds[key]
