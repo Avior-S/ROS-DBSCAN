@@ -18,31 +18,40 @@ def find_eps(x_train, min_pnts):
     # plt.plot(distances)
     # plt.show()
     from scipy.signal import savgol_filter
-    distances = savgol_filter(distances, 51, 2)
-    # plt.plot(range(1, len(distances) + 1), distances, 'r')
+    sg_distances = savgol_filter(distances, 51, 2)
+    # plt.plot(range(1, len(sg_distances) + 1), sg_distances, range(1, len(sg_distances) + 1), distances)
     # plt.show()
-    kneedle = KneeLocator(range(int(len(distances)*0.7), len(distances) + 1),  # x values
-                          distances[int(len(distances)*0.7) - 1:],  # y values
+    kneedle = KneeLocator(range(1, len(sg_distances) + 1),  # x values
+                          sg_distances,  # y values
                           S=0,  # measure of how many “flat” points we expect to see in the unmodified data curve
                           curve="convex",  # parameter from figure concave/convex
                           online=True,
                           direction="increasing")  # parameter from figure
+    # kneedle = KneeLocator(range(int(len(sg_distances)*0.7), len(sg_distances) + 1),  # x values
+    #                       sg_distances[int(len(sg_distances)*0.7) - 1:],  # y values
+    #                       S=0,  # measure of how many “flat” points we expect to see in the unmodified data curve
+    #                       curve="convex",  # parameter from figure concave/convex
+    #                       online=True,
+    #                       direction="increasing")  # parameter from figure
     # kneedle.plot_knee_normalized()
     print(kneedle.elbow)
     print(kneedle.knee_y)
     kneedle.plot_knee()
     return kneedle.knee_y
-def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
-    def concat_datasets(datasets):
-        trainings, positives, negatives = datasets
-        training = pd.concat(trainings, ignore_index=True)
-        positive = pd.concat(positives, ignore_index=True)
-        negative = pd.concat(negatives, ignore_index=True)
-        x_train = training
-        x_test = pd.concat([positive, negative], ignore_index=True)
-        x_dfs = pd.concat([training, positive, negative], ignore_index=True)
-        return x_train, x_test, x_dfs
 
+
+def concat_datasets(datasets):
+    trainings, positives, negatives = datasets
+    training = pd.concat(trainings, ignore_index=True)
+    positive = pd.concat(positives, ignore_index=True)
+    negative = pd.concat(negatives, ignore_index=True)
+    x_train = training
+    x_test = pd.concat([positive, negative], ignore_index=True)
+    x_dfs = pd.concat([training, positive, negative], ignore_index=True)
+    return x_train, x_test, x_dfs
+
+
+def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
     def predict(class_trains, sample, max_dist):
         min_dist = np.min(cdist(class_trains, [sample]))
         if max_dist >= min_dist:
@@ -59,37 +68,47 @@ def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
     eps_calibration = True
     predictions = []
     i_pred = []
+    predicts = []
     while(eps_calibration):
         labels_ = DBSCAN(eps=my_eps, min_samples=min_group).fit_predict(Xtrain)
         predicts = labels_
-        predictions = []
-        i_pred = []
-        for i in range(0, len(predicts), 1):
-            if predicts[i] >= 0:
-                predictions.append(1)
-                i_pred.append(i)
-            else:
-                predictions.append(0)
-
-        # calibration the eps (if needed)
-        count = 0
-        trainings, positives, negatives = datasets
-        new_trainings_predicts = []
-        for train in trainings:
-            predicts = predictions[count:train.shape[0]+count]
-            new_trainings_predicts.append(predicts)
-            count += train.shape[0]
-        longests = []
-        for y_pred in new_trainings_predicts:
-            longest = M.Measurements.longest_sequence(y_pred, Conf.NEGATIVE_LABEL)
-            longests.append(longest)
-        longests.sort()
-        print(longests)
-        if(len([i for i in longests if i>7]) > len(longests) * 0.15):
+        fp_labels = [i for i in labels_ if i < 0]
+        # predictions = []
+        # i_pred = []
+        # for i in range(0, len(predicts), 1):
+        #     if predicts[i] >= 0:
+        #         predictions.append(1)
+        #         i_pred.append(i)
+        #     else:
+        #         predictions.append(0)
+        #
+        # # calibration the eps (if needed)
+        # count = 0
+        # trainings, positives, negatives = datasets
+        # new_trainings_predicts = []
+        # for train in trainings:
+        #     predicts = predictions[count:train.shape[0]+count]
+        #     new_trainings_predicts.append(predicts)
+        #     count += train.shape[0]
+        # longests = []
+        # for y_pred in new_trainings_predicts:
+        #     longest = M.Measurements.longest_sequence(y_pred, Conf.NEGATIVE_LABEL)
+        #     longests.append(longest)
+        # longests.sort()
+        # print(longests)
+        # if(len([i for i in longests if i>7]) > len(longests) * 0.15):
+        if len(fp_labels)/len(labels_) > 0.1:
             my_eps += 0.04
         else:
             eps_calibration = False
 
+
+    for i in range(0, len(predicts), 1):
+        if predicts[i] >= 0:
+            predictions.append(1)
+            i_pred.append(i)
+        else:
+            predictions.append(0)
     print("----------------------- EPS =     " + str(my_eps) + "    min group =    " + str(min_group) +
           "  -----------------------")
     # update the datasets_preds

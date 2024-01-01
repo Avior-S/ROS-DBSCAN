@@ -9,7 +9,7 @@ import Measurements as M
 import numpy as np
 from scipy.spatial.distance import cdist
 from operator import itemgetter
-from DBSCAN import run_dbscan_n_predict
+
 
 
 def removes_nan(datasets):
@@ -161,11 +161,13 @@ def sum_result(dict):
     tmp = "not exist file"
     count = 0
     anomaly_count = 0
+    lst = []
     for key in dict.keys():
         if tmp not in key:
             if not count == 0:
                 print(tmp)
                 print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+                lst.append(anomaly_count/count)
             count = 0
             anomaly_count = 0
             tmp = key[:-6]
@@ -174,57 +176,106 @@ def sum_result(dict):
             anomaly_count += 1
     print(tmp)
     print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+    lst.append(anomaly_count / count)
+    return lst
 
+
+def my_DBSCAN(d):
+    from ROS_DBSCAN import run_dbscan_n_predict
+    df = pd.DataFrame()
+    similar_columns = d.find_similar_columns_in_training()
+    d.filter_by_columns(similar_columns)
+    # mic_topics = panda_mic_topics()
+    mic_topics = turtlebot3_mic_topics()
+    mic_dfs = d.get_copied_datasets()
+    flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
+    norm_flt_mic_dfs = normalization(flt_mic_dfs)
+    dfs, n_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
+    d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+    # print(predictions_information(d))
+    trainings_preds, positives_preds, negatives_preds = d.get_predictions()
+    trainings_names, positives_names, negatives_names = d.get_names()
+    multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
+    max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
+    mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest)
+    print("summarize Result for Mic features:")
+    df['mic'] = sum_result(mic_dict_preds)
+
+    # Macro Anomaly Detection
+    print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
+    mac_dfs = d.get_copied_datasets()
+    d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+    n_d_mac_dfs = normalization(d_mac_dfs)
+    mac_topics = most_influence_feature_by_pca(n_d_mac_dfs, n=27)
+    flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
+    dfs, n_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
+    d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+    # print(predictions_information(d))
+    trainings_preds, positives_preds, negatives_preds = d.get_predictions()
+    trainings_names, positives_names, negatives_names = d.get_names()
+    multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
+    max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
+    mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
+    print("summarize Result for Macro features:")
+    df['mac'] = sum_result(mac_dict_preds)
+
+    for key in mic_dict_preds.keys():
+        mic_dict_preds[key] += mac_dict_preds[key]
+
+    print("\n\nUnion Result:")
+    df['union'] = sum_result(mic_dict_preds)
+    df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
+
+
+def my_AEAD(d):
+    import ROS_AEAD as AEAD
+    df = pd.DataFrame()
+    similar_columns = d.find_similar_columns_in_training()
+    d.filter_by_columns(similar_columns)
+    # mic_topics = panda_mic_topics()
+    mic_topics = turtlebot3_mic_topics()
+    mic_dfs = d.get_copied_datasets()
+    flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
+    norm_flt_mic_dfs = normalization(flt_mic_dfs)
+    dfs, n_dfs = AEAD.AEAD(norm_flt_mic_dfs, feat=3)
+    d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+    print(predictions_information(d))
+    trainings_preds, positives_preds, negatives_preds = d.get_predictions()
+    trainings_names, positives_names, negatives_names = d.get_names()
+    multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
+    max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
+    mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest)
+    print("summarize Result for Mic features:")
+    df['mic'] = sum_result(mic_dict_preds)
+
+    # Macro Anomaly Detection
+    print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
+    mac_dfs = d.get_copied_datasets()
+    d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+    n_d_mac_dfs = normalization(d_mac_dfs)
+    mac_topics = most_influence_feature_by_pca(n_d_mac_dfs, n=27)
+    flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
+    dfs, n_dfs = AEAD.AEAD(flt_n_d_mac_dfs)
+    d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+    print(predictions_information(d))
+    trainings_preds, positives_preds, negatives_preds = d.get_predictions()
+    trainings_names, positives_names, negatives_names = d.get_names()
+    multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
+    # multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
+    #                      zip(negatives_names, negatives_preds)]
+    max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
+    mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
+    print("summarize Result for Macro features:")
+    df['mac'] = sum_result(mac_dict_preds)
+
+    for key in mic_dict_preds.keys():
+        mic_dict_preds[key] += mac_dict_preds[key]
+
+    print("\n\nUnion Result:")
+    df['union'] = sum_result(mic_dict_preds)
+    df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
 
 scenario = 'sim_turtlebot3'
 d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/")
-
-similar_columns = d.find_similar_columns_in_training()
-d.filter_by_columns(similar_columns)
-# mic_topics = panda_mic_topics()
-mic_topics = turtlebot3_mic_topics()
-mic_dfs = d.get_copied_datasets()
-flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
-norm_flt_mic_dfs = normalization(flt_mic_dfs)
-dfs, n_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
-d.set_predictions(n_dfs[0],n_dfs[1],n_dfs[2])
-# print(predictions_information(d))
-trainings_preds, positives_preds, negatives_preds = d.get_predictions()
-trainings_names, positives_names, negatives_names = d.get_names()
-multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
-                     zip(negatives_names, negatives_preds)]
-max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest)
-print("summarize Result for Mic features:")
-sum_result(mic_dict_preds)
-
-# Macro Anomaly Detection
-print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
-mac_dfs = d.get_copied_datasets()
-d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
-n_d_mac_dfs = normalization(d_mac_dfs)
-mac_topics = most_influence_feature_by_pca(n_d_mac_dfs)
-flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
-dfs, n_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
-d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
-# print(predictions_information(d))
-trainings_preds, positives_preds, negatives_preds = d.get_predictions()
-trainings_names, positives_names, negatives_names = d.get_names()
-multi_paths_preds = [zip(trainings_names, trainings_preds), zip(positives_names, positives_preds),
-                     zip(negatives_names, negatives_preds)]
-max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
-print("summarize Result for Macro features:")
-sum_result(mac_dict_preds)
-
-for key in mic_dict_preds.keys():
-    mic_dict_preds[key] += mac_dict_preds[key]
-
-print("\n\nUnion Result:")
-sum_result(mic_dict_preds)
-# # print(flt_dfs)
-# no_nan_dfs = removes_nan(dfs)
-# n_dfs = normalization(no_nan_dfs)
-# most_influence_feature = most_influence_feature_by_pca(n_dfs)
-# pca_dfs = pca_filter(n_dfs)
-# print(most_influence_feature)
+# my_DBSCAN(d)
+my_AEAD(d)
