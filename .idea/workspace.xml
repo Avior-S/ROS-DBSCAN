@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py">
-      <change afterPath="$PROJECT_DIR$/ROS_AEAD.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kolmogorov_smirnov.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DBSCAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROS_DBSCAN.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +69,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Avior/Desktop/thesis_offline-master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Avior/Downloads/generative-model-master&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
@@ -185,7 +184,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1703356381222</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL‎-00013" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1704147865071</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL‎-00013" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1704147865071</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -238,6 +245,16 @@
           <line>165</line>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kolmogorov_smirnov.py</url>
+          <line>141</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kolmogorov_smirnov.py</url>
+          <line>58</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -250,6 +267,7 @@
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="test_prediction_loss" />
+        <watch expression="norm_norm" />
       </configuration>
     </watches-manager>
   </component>

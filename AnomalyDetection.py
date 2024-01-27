@@ -227,6 +227,27 @@ def my_DBSCAN(d):
     df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
 
 
+def get_mic_df(d):
+    similar_columns = d.find_similar_columns_in_training()
+    d.filter_by_columns(similar_columns)
+    # mic_topics = panda_mic_topics()
+    mic_topics = turtlebot3_mic_topics()
+    mic_dfs = d.get_copied_datasets()
+    flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
+    return normalization(flt_mic_dfs)
+
+
+def get_mac_df(d):
+    # mic_topics = panda_mic_topics()
+    mic_topics = turtlebot3_mic_topics()
+    mac_dfs = d.get_copied_datasets()
+    d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+    n_d_mac_dfs = normalization(d_mac_dfs)
+    mac_topics = most_influence_feature_by_pca(n_d_mac_dfs, n=27)
+    flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
+    return flt_n_d_mac_dfs
+
+
 def my_AEAD(d):
     import ROS_AEAD as AEAD
     df = pd.DataFrame()
@@ -275,7 +296,57 @@ def my_AEAD(d):
     df['union'] = sum_result(mic_dict_preds)
     df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
 
-scenario = 'sim_turtlebot3'
-d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/")
+
+def my_ks(d):
+    import kolmogorov_smirnov as ks
+    # runs, all_runs = ks.load_directory(NORM_COUNTS_PATH, NORM_FILE_PREFIX)
+    norm_mic_df = get_mic_df(d)
+    runs = norm_mic_df
+    normal_runs = [r.to_numpy() for r in runs[0]]
+    temp = [np.reshape(r, -1) for r in normal_runs]
+    all_normal_runs = np.concatenate(temp)
+    normal_test_runs = [r.to_numpy() for r in runs[1]]
+    anomaly_runs = [r.to_numpy() for r in runs[2]]
+    all_anomaly_runs = np.concatenate([np.reshape(r, -1) for r in anomaly_runs])
+    TITLE = 'Normal'
+    # ks.plot_hist(normal_runs, TITLE)
+
+    ks_normal_normal = ks.ks_test(normal_runs)
+    ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
+    ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
+    TITLE_ANOMALY = 'MIX'
+    ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
+    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    auroc = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
+                             ks_norm_test=ks_normal_test ,title='ROC ' + TITLE_ANOMALY)
+    ks.AUROCs.append(auroc)
+    print("-----------------      PCA       ------------------------")
+    similar_columns = d.find_similar_columns_in_training()
+    d.filter_by_columns(similar_columns)
+    mac_df = get_mac_df(d)
+    runs = mac_df
+    normal_runs = [r.to_numpy() for r in runs[0]]
+    temp = [np.reshape(r, -1) for r in normal_runs]
+    all_normal_runs = np.concatenate(temp)
+    normal_test_runs = [r.to_numpy() for r in runs[1]]
+    anomaly_runs = [r.to_numpy() for r in runs[2]]
+    all_anomaly_runs = np.concatenate([np.reshape(r, -1) for r in anomaly_runs])
+    TITLE = 'Normal'
+    # ks.plot_hist(normal_runs, TITLE)
+
+    ks_normal_normal = ks.ks_test(normal_runs)
+    ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
+    ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
+    TITLE_ANOMALY = 'MIX'
+    ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
+    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    auroc = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
+                                ks_norm_test=ks_normal_test, title='ROC ' + TITLE_ANOMALY)
+    ks.AUROCs.append(auroc)
+
+
+scenario = 'real_turtlebot3'
+d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.2)
 # my_DBSCAN(d)
-my_AEAD(d)
+# my_AEAD(d)
+my_ks(d)
