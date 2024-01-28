@@ -303,8 +303,7 @@ def my_ks(d):
     norm_mic_df = get_mic_df(d)
     runs = norm_mic_df
     normal_runs = [r.to_numpy() for r in runs[0]]
-    temp = [np.reshape(r, -1) for r in normal_runs]
-    all_normal_runs = np.concatenate(temp)
+    all_normal_runs = np.concatenate([np.reshape(r, -1) for r in normal_runs])
     normal_test_runs = [r.to_numpy() for r in runs[1]]
     anomaly_runs = [r.to_numpy() for r in runs[2]]
     all_anomaly_runs = np.concatenate([np.reshape(r, -1) for r in anomaly_runs])
