@@ -337,10 +337,11 @@ def my_ks(d):
     ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
     ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
     TITLE_ANOMALY = 'MIX'
+    files_names = d.get_names()
     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
     print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
     auroc = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
-                                ks_norm_test=ks_normal_test, title='ROC ' + TITLE_ANOMALY)
+                                ks_norm_test=ks_normal_test, title='ROC ' + TITLE_ANOMALY, files_names=files_names)
     ks.AUROCs.append(auroc)
 
 

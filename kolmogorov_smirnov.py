@@ -73,10 +73,19 @@ def threshold_dist(norm_norm, threshold_percent=0.95):
     return avg_dist
 
 
-def detect_anomalies(ks_norm_anomaly, ks_norm_norm, ks_norm_test, threshold_percent=0.95, title="ROC"):
+def detect_anomalies(ks_norm_anomaly, ks_norm_norm, ks_norm_test, threshold_percent=0.95, title="ROC", files_names=[]):
     global EXP_NUM
     global TOTAL_ACC
     EXP_NUM += 1
+    anomaly_files_name = files_names[2]
+    dict_detect = {}
+    dict_exists = {}
+    for file_name in anomaly_files_name:
+        scenario = file_name.split('\\')[1]
+        if scenario not in dict_exists.keys():
+            dict_exists[scenario] = 0
+            dict_detect[scenario] = 0
+        dict_exists[scenario] +=1
     avg_dist = threshold_dist(ks_norm_norm, threshold_percent)
     count_anom = [1 if i >= avg_dist else 0 for i in ks_norm_anomaly]
     count_false_anomalies = [1 if i >= avg_dist else 0 for i in ks_norm_test]
