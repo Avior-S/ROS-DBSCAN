@@ -185,8 +185,8 @@ def my_DBSCAN(d):
     df = pd.DataFrame()
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    # mic_topics = panda_mic_topics()
-    mic_topics = turtlebot3_mic_topics()
+    mic_topics = panda_mic_topics()
+    # mic_topics = turtlebot3_mic_topics()
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     norm_flt_mic_dfs = normalization(flt_mic_dfs)
@@ -230,16 +230,16 @@ def my_DBSCAN(d):
 def get_mic_df(d):
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    # mic_topics = panda_mic_topics()
-    mic_topics = turtlebot3_mic_topics()
+    mic_topics = panda_mic_topics()
+    # mic_topics = turtlebot3_mic_topics()
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     return normalization(flt_mic_dfs)
 
 
 def get_mac_df(d):
-    # mic_topics = panda_mic_topics()
-    mic_topics = turtlebot3_mic_topics()
+    mic_topics = panda_mic_topics()
+    # mic_topics = turtlebot3_mic_topics()
     mac_dfs = d.get_copied_datasets()
     d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
@@ -314,10 +314,11 @@ def my_ks(d):
     ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
     ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
     TITLE_ANOMALY = 'MIX'
+    files_names = d.get_names()
     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
     print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
-    auroc = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
-                             ks_norm_test=ks_normal_test ,title='ROC ' + TITLE_ANOMALY)
+    auroc, dict_results_mic = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
+                             ks_norm_test=ks_normal_test ,title='ROC ' + TITLE_ANOMALY, files_names=files_names)
     ks.AUROCs.append(auroc)
     print("-----------------      PCA       ------------------------")
     similar_columns = d.find_similar_columns_in_training()
@@ -340,12 +341,21 @@ def my_ks(d):
     files_names = d.get_names()
     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
     print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
-    auroc = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
+    auroc, dict_results_mac = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
                                 ks_norm_test=ks_normal_test, title='ROC ' + TITLE_ANOMALY, files_names=files_names)
     ks.AUROCs.append(auroc)
+    dict_final_results = {}
+    for key in dict_results_mac:
+        union_result = [dict_results_mic[key][i] or dict_results_mac[key][i] for i in range(0, len(dict_results_mic[key]))]
+        key_len = len(dict_results_mic[key])
+        dict_final_results[key] = [sum(dict_results_mic[key])/key_len, sum(dict_results_mac[key])/key_len, sum(union_result)/key_len]
+    df = pd.DataFrame.from_dict(dict_final_results, orient='index', columns=['mic', 'mac', 'Union'])
+    df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\ks_result.xlsx')
 
 
-scenario = 'real_turtlebot3'
+
+
+scenario = 'real_panda'
 d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.2)
 # my_DBSCAN(d)
 # my_AEAD(d)

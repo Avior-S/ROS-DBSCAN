@@ -78,17 +78,23 @@ def detect_anomalies(ks_norm_anomaly, ks_norm_norm, ks_norm_test, threshold_perc
     global TOTAL_ACC
     EXP_NUM += 1
     anomaly_files_name = files_names[2]
-    dict_detect = {}
     dict_exists = {}
     for file_name in anomaly_files_name:
         scenario = file_name.split('\\')[1]
         if scenario not in dict_exists.keys():
             dict_exists[scenario] = 0
-            dict_detect[scenario] = 0
-        dict_exists[scenario] +=1
+        dict_exists[scenario] += 1
     avg_dist = threshold_dist(ks_norm_norm, threshold_percent)
     count_anom = [1 if i >= avg_dist else 0 for i in ks_norm_anomaly]
+    count_anom_by_scenario = 0
+    dict_detect = {}
+    for scenario in dict_exists.keys():
+        dict_detect[scenario] = count_anom[count_anom_by_scenario:count_anom_by_scenario + dict_exists[scenario]]
+        count_anom_by_scenario += dict_exists[scenario]
+        print("Scenario " + scenario + " true positive rate: " + str(sum(dict_detect[scenario])/dict_exists[scenario]))
     count_false_anomalies = [1 if i >= avg_dist else 0 for i in ks_norm_test]
+    dict_detect['Normal (FP)'] = count_false_anomalies
+    print('Normal (FP) ' + str(sum(count_false_anomalies)/len(count_false_anomalies)))
     TOTAL_ACC += sum(count_anom) * 100 / len(ks_norm_anomaly)
     print('Total anomalies detected:', sum(count_anom), 'of', len(ks_norm_anomaly),
           ', accuracy:' + str(sum(count_anom) * 100 / len(ks_norm_anomaly)) + '%')
@@ -110,8 +116,8 @@ def detect_anomalies(ks_norm_anomaly, ks_norm_norm, ks_norm_test, threshold_perc
         y.append(true_positive / (true_positive + false_negative))
         tp = tp + true_positive / len(ks_norm_anomaly)
         fp = fp + false_positive / len(ks_norm_norm)
-    #     print('True positive ', tp * 100/len(nn_copy))
-    #     print('True negative', fp * 100/len(nn_copy))
+        print('True positive ', tp * 100/len(nn_copy))
+        print('True negative', fp * 100/len(nn_copy))
     np.savetxt('x_' + title + '.csv', x, delimiter=",")
     np.savetxt('y_' + title + '.csv', y, delimiter=",")
     fig, axs = plt.subplots(1)
@@ -129,7 +135,8 @@ def detect_anomalies(ks_norm_anomaly, ks_norm_norm, ks_norm_test, threshold_perc
     print('AUROC:', auroc)
     print('True Positive Rate', sum(count_anom) * 100 / len(ks_norm_anomaly))
     print('False Positive Rate: ', sum(count_false_anomalies) * 100 / len(ks_norm_test))
-    return [title.replace("ROC", ''), auroc, tp * 100 / len(nn_copy), sum(count_false_anomalies) * 100 / len(ks_norm_test)]
+    return [title.replace("ROC", ''), auroc, tp * 100 / len(nn_copy),
+            sum(count_false_anomalies) * 100 / len(ks_norm_test)], dict_detect
 
 def main():
     TITLE_NORMAL = 'Real Panda'
