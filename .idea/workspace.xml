@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py">
+      <change afterPath="$PROJECT_DIR$/kolmogorov_smirnov_David.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dataset.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kolmogorov_smirnov.py" beforeDir="false" afterPath="$PROJECT_DIR$/kolmogorov_smirnov.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -216,7 +218,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1706422344288</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL‎-00017" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1707077159880</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL‎-00017" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707077159880</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -266,8 +276,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/kolmogorov_smirnov.py</url>
-          <line>157</line>
+          <line>180</line>
           <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kolmogorov_smirnov.py</url>
+          <line>64</line>
+          <option name="timeStamp" value="90" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kolmogorov_smirnov.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/kolmogorov_smirnov.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="96" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -282,6 +307,7 @@
       <configuration name="PythonConfigurationType">
         <watch expression="test_prediction_loss" />
         <watch expression="norm_norm" />
+        <watch expression="rj" />
       </configuration>
     </watches-manager>
   </component>

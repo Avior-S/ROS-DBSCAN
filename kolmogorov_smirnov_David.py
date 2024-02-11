@@ -1,7 +1,6 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-from collections import Counter
 from scipy.stats import ks_2samp
 from sklearn.metrics import roc_curve
 import pandas as pd
@@ -42,38 +41,16 @@ def ks_test(runs, more_runs=[]):
     if len(more_runs) == 0:  # Compare to itself
         for j, rj in enumerate(runs):
             other_runs = np.concatenate([np.reshape(runs[i], -1) for i in range(len(runs)) if i != j])
-
             or_reshape = np.reshape(other_runs, -1)
-            or_len = len(or_reshape)
-            # or_count = []
-            # for x in range(0, SUP):
-            #     x_count = list(or_reshape).count(x)
-            #     or_count.append(x_count)
-            or_count = np.array([list(or_reshape).count(x)/or_len for x in range(0,SUP)])
             rj_reshape = np.reshape(rj, -1)
-            rj_len = len(rj_reshape)
-            rj_count = np.array([list(rj_reshape).count(x)/rj_len for x in range(0, SUP)])
-            ks_test.append(ks_2samp(or_count, rj_count).statistic)
-            # plt.plot(range(0,SUP), rj_count, 'r', range(0,SUP), or_count, 'b')
-            # plt.show()
-            # plot_hist([or_count,rj_count], str(j))
+            ks_test.append(ks_2samp(np.reshape(other_runs, -1), np.reshape(rj, -1)).statistic)
     else:  # Compare to other
         n = 2
         # more_runs - it's normal_normal runs
-        # runs - it's potentially anomaly runs
+        # runs - it's potentialy anomaly runs
         for j, rj in enumerate(runs):
             rj = rj[len(rj) * (n - 2) // 3:]
-            mr_reshape = np.reshape(more_runs, -1)
-            mr_len = len(mr_reshape)
-            # or_count = []
-            # for x in range(0, SUP):
-            #     x_count = list(or_reshape).count(x)
-            #     or_count.append(x_count)
-            mr_count = np.array([list(mr_reshape).count(x)/mr_len for x in range(0,SUP)])
-            rj_reshape = np.reshape(rj, -1)
-            rj_len = len(rj_reshape)
-            rj_count = np.array([list(rj_reshape).count(x)/rj_len for x in range(0, SUP)])
-            ks_test.append(ks_2samp(mr_count, rj_count).statistic)
+            ks_test.append(ks_2samp(np.reshape(more_runs, -1), np.reshape(rj, -1)).statistic)
     return ks_test
 
 

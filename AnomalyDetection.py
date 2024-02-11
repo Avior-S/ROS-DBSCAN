@@ -298,7 +298,7 @@ def my_AEAD(d):
 
 
 def my_ks(d):
-    import kolmogorov_smirnov as ks
+    import kolmogorov_smirnov_David as ks
     # runs, all_runs = ks.load_directory(NORM_COUNTS_PATH, NORM_FILE_PREFIX)
     norm_mic_df = get_mic_df(d)
     runs = norm_mic_df
@@ -353,10 +353,64 @@ def my_ks(d):
     df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\ks_result.xlsx')
 
 
+def david_ks2(d):
+    import kolmogorov_smirnov_David as ks
+    # runs, all_runs = ks.load_directory(NORM_COUNTS_PATH, NORM_FILE_PREFIX)
+    count_columns = d.find_columns_contains("Count")
+    d.filter_by_columns(count_columns)
+    runs = d.get_copied_datasets()
+    normal_runs = [r.to_numpy() for r in runs[0]]
+    all_normal_runs = np.concatenate([np.reshape(r, -1) for r in normal_runs])
+    normal_test_runs = [r.to_numpy() for r in runs[1]]
+    anomaly_runs = [r.to_numpy() for r in runs[2]]
+    all_anomaly_runs = np.concatenate([np.reshape(r, -1) for r in anomaly_runs])
+    TITLE = 'Normal'
+    # ks.plot_hist(normal_runs, TITLE)
+
+    ks_normal_normal = ks.ks_test(normal_runs)
+    ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
+    ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
+    TITLE_ANOMALY = 'MIX'
+    files_names = d.get_names()
+    ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
+    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    auroc, dict_results_mic = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
+                                                  ks_norm_test=ks_normal_test, threshold_percent=0.95, title='ROC ' + TITLE_ANOMALY,
+                                                  files_names=files_names)
+    ks.AUROCs.append(auroc)
+
+def david_ks(d):
+    import kolmogorov_smirnov as ks
+    # runs, all_runs = ks.load_directory(NORM_COUNTS_PATH, NORM_FILE_PREFIX)
+    count_columns = d.find_columns_contains("Count")
+    d.filter_by_columns(count_columns)
+    runs = d.get_copied_datasets()
+    normal_runs = [r.to_numpy() for r in runs[0]]
+    all_normal_runs = np.concatenate([np.reshape(r, -1) for r in normal_runs])
+    normal_test_runs = [r.to_numpy() for r in runs[1]]
+    anomaly_runs = [r.to_numpy() for r in runs[2]]
+    all_anomaly_runs = np.concatenate([np.reshape(r, -1) for r in anomaly_runs])
+    TITLE = 'Normal'
+    # ks.plot_hist(normal_runs, TITLE)
+
+    ks_normal_normal = ks.ks_test(normal_runs)
+    ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
+    ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
+    TITLE_ANOMALY = 'MIX'
+    files_names = d.get_names()
+    ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
+    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    auroc, dict_results_mic = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
+                                                  ks_norm_test=ks_normal_test, threshold_percent=0.95, title='ROC ' + TITLE_ANOMALY,
+                                                  files_names=files_names)
+    ks.AUROCs.append(auroc)
 
 
-scenario = 'real_panda'
-d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.2)
+
+scenario = 'real_turtlebot3'
+d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.3)
 # my_DBSCAN(d)
 # my_AEAD(d)
-my_ks(d)
+david_ks(d)
+#print("\n\n ----------------------------------------------------------------- \n\n")
+#david_ks2(d)

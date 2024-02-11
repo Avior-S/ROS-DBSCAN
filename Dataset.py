@@ -104,6 +104,12 @@ class Datasets:
         all = pd.concat([all_trn, all_pos, all_neg], join='inner')
         return all.columns
 
+
+    def find_columns_contains(self, str):
+        all_columns = self.find_similar_columns_in_training()
+        return [i for i in all_columns if str in i]
+
+
     def filter_by_columns(self, columns):
         trainings = self.trainings_preds.datasets
         positives = self.positives_preds.datasets
