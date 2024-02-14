@@ -45,35 +45,45 @@ def ks_test(runs, more_runs=[]):
 
             or_reshape = np.reshape(other_runs, -1)
             or_len = len(or_reshape)
-            # or_count = []
-            # for x in range(0, SUP):
-            #     x_count = list(or_reshape).count(x)
-            #     or_count.append(x_count)
-            or_count = np.array([list(or_reshape).count(x)/or_len for x in range(0,SUP)])
+            or_probability_mass = np.array([list(or_reshape).count(x)/or_len for x in range(0,SUP)])
+            or_cumulative_probability = []
+            prob_sum = 0
+            for i in or_probability_mass:
+                prob_sum += i
+                or_cumulative_probability.append(prob_sum)
             rj_reshape = np.reshape(rj, -1)
             rj_len = len(rj_reshape)
-            rj_count = np.array([list(rj_reshape).count(x)/rj_len for x in range(0, SUP)])
-            ks_test.append(ks_2samp(or_count, rj_count).statistic)
-            # plt.plot(range(0,SUP), rj_count, 'r', range(0,SUP), or_count, 'b')
+            rj_probability_mass = np.array([list(rj_reshape).count(x)/rj_len for x in range(0, SUP)])
+            rj_cumulative_probability = []
+            prob_sum = 0
+            for i in rj_probability_mass:
+                prob_sum += i
+                rj_cumulative_probability.append(prob_sum)
+            ks_test.append(ks_2samp(or_cumulative_probability, rj_cumulative_probability).statistic)
+            # plt.plot(range(0,SUP), rj_cumulative_probability, 'r', range(0,SUP), or_cumulative_probability, 'b')
             # plt.show()
             # plot_hist([or_count,rj_count], str(j))
     else:  # Compare to other
-        n = 2
         # more_runs - it's normal_normal runs
         # runs - it's potentially anomaly runs
         for j, rj in enumerate(runs):
-            rj = rj[len(rj) * (n - 2) // 3:]
             mr_reshape = np.reshape(more_runs, -1)
             mr_len = len(mr_reshape)
-            # or_count = []
-            # for x in range(0, SUP):
-            #     x_count = list(or_reshape).count(x)
-            #     or_count.append(x_count)
-            mr_count = np.array([list(mr_reshape).count(x)/mr_len for x in range(0,SUP)])
+            mr_probability_mass = np.array([list(mr_reshape).count(x)/mr_len for x in range(0,SUP)])
+            mr_cumulative_probability = []
+            prob_sum = 0
+            for i in mr_probability_mass:
+                prob_sum += i
+                mr_cumulative_probability.append(prob_sum)
             rj_reshape = np.reshape(rj, -1)
             rj_len = len(rj_reshape)
-            rj_count = np.array([list(rj_reshape).count(x)/rj_len for x in range(0, SUP)])
-            ks_test.append(ks_2samp(mr_count, rj_count).statistic)
+            rj_probability_mass = np.array([list(rj_reshape).count(x)/rj_len for x in range(0, SUP)])
+            rj_cumulative_probability = []
+            prob_sum = 0
+            for i in rj_probability_mass:
+                prob_sum += i
+                rj_cumulative_probability.append(prob_sum)
+            ks_test.append(ks_2samp(mr_cumulative_probability, rj_cumulative_probability).statistic)
     return ks_test
 
 
