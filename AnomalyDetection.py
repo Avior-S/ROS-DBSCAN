@@ -381,7 +381,7 @@ def david_ks(d):
 
 
 scenario = 'real_turtlebot3'
-d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.3)
+d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/type/", test_size=0.3)
 # my_DBSCAN(d)
 # my_AEAD(d)
 david_ks(d)

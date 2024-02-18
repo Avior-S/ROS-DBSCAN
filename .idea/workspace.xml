@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kolmogorov_smirnov.py" beforeDir="false" afterPath="$PROJECT_DIR$/kolmogorov_smirnov.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kolmogorov_smirnov_David.py" beforeDir="false" afterPath="$PROJECT_DIR$/kolmogorov_smirnov_old.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,7 +230,23 @@
       <option name="project" value="LOCAL‎" />
       <updated>1707688742698</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL‎-00019" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1707928468010</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL‎-00019" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707928468010</updated>
+    </task>
+    <task id="LOCAL‎-00020" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1708268864600</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL‎-00020" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1708268864600</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
