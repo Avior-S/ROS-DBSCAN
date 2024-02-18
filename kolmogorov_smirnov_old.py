@@ -151,7 +151,7 @@ def main():
     # TITLE_ANOMALY = 'Real Panda Change object weight'
     # NORM_COUNTS_PATH = './data/real_panda/normal'
     # NORM_FILE_PREFIX = 'counts_panda_normal'
-    # ANOMALY_COUNTS_PATH = './data/real_panda/type/change_obj_weight'
+    # ANOMALY_COUNTS_PATH = './data/real_panda/abnormal/change_obj_weight'
     # ANOM_FILE_PREFIX = 'counts_panda_change_wieght'
 
     runs, all_runs = load_directory(NORM_COUNTS_PATH, NORM_FILE_PREFIX)

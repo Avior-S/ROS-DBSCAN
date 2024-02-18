@@ -26,7 +26,7 @@ class Datasets:
         if not trainings_paths:
             print("trainings_paths: empty")
 
-        # The files will be inside two directory, 1 for "type" and 2 for the type of the type run
+        # The files will be inside two directory, 1 for "abnormal" and 2 for the type of the abnormal run
         negatives_paths = []
         for neg_dir_path in  self.get_dirs_names(negatives_dir_path):
             files = Datasets.get_files_name(neg_dir_path)
