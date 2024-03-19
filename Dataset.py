@@ -3,6 +3,8 @@ from collections import namedtuple
 import numpy as np
 from Style import Configure as Conf
 import pandas as pd
+from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
 ROWS_INDEX = 0
 COLOMUNS_INDEX = 1
 
@@ -95,6 +97,42 @@ class Datasets:
         negatives = self.negatives_preds.datasets
         return trainings, positives, negatives
 
+    def get_mic_topics(self):
+        topics = []
+        if "panda" in self.trainings_preds.paths[0]:
+            topics = []
+            for epv in ['effort', 'position', 'velocity']:
+                for i in range(1, 8):
+                    topics.append('panda_joint' + str(i) + ' ' + epv)
+                for i in range(1, 3):
+                    topics.append('panda_finger_joint' + str(i) + ' ' + epv)
+        else:
+            topics = ['linear velocity x', 'linear velocity y', 'angular velocity z']
+        return topics
+
+    def get_mic_normalize_datasets(self):
+        mic_topics = self.get_mic_topics()
+        mic_dfs = self.get_copied_datasets()
+        flt_mic_dfs = self.filter_by_columns(mic_topics)
+        return self.normalization(flt_mic_dfs)
+
+    def get_topics_statistics_normalize_datasets(self):
+        similar_columns = self.find_similar_columns_in_training()
+        self.filter_by_columns(similar_columns)
+        mac_dfs = self.get_copied_datasets()
+        d_mac_dfs = self.topic_drop(mac_dfs, self.get_mic_topics(), 'Active')
+        return self.normalization()
+
+    def normalization(self):
+        trainings, positives, negatives = self.get_datasets()
+        t_df = pd.concat(trainings, ignore_index=True)
+        min_max_scaler = preprocessing.MinMaxScaler()
+        min_max_scaler.fit(t_df)
+        n_trainings = list(map(lambda df: pd.DataFrame(min_max_scaler.transform(df), columns=t_df.columns), trainings))
+        n_positives = list(map(lambda df: pd.DataFrame(min_max_scaler.transform(df), columns=t_df.columns), positives))
+        n_negatives = list(map(lambda df: pd.DataFrame(min_max_scaler.transform(df), columns=t_df.columns), negatives))
+        self.set_datasets(n_trainings, n_positives, n_negatives)
+        return n_trainings, n_positives, n_negatives
 
     def find_similar_columns_in_training(self):
         trainings, positives, negatives = self.get_datasets()
@@ -104,11 +142,9 @@ class Datasets:
         all = pd.concat([all_trn, all_pos, all_neg], join='inner')
         return all.columns
 
-
     def find_columns_contains(self, str):
         all_columns = self.find_similar_columns_in_training()
         return [i for i in all_columns if str in i]
-
 
     def filter_by_columns(self, columns):
         trainings = self.trainings_preds.datasets
@@ -118,8 +154,6 @@ class Datasets:
         flt_positive = list(map(lambda df: df[columns], positives))
         flt_negative = list(map(lambda df: df[columns], negatives))
         self.set_datasets(flt_training, flt_positive, flt_negative)
-
-
 
     def set_datasets(self,training_datasets, positive_datasets, negative_datasets):
         self.trainings_preds = DataPred(self.trainings_preds.paths, training_datasets, self.trainings_preds.predictions)
@@ -236,6 +270,20 @@ class Datasets:
     @staticmethod
     def remove_columns(dataset, columns):
         return dataset.drop(columns, COLOMUNS_INDEX)
+
+
+def drop_topics(datasets, topics=None, st='Active'):
+    if topics is None:
+        topics = []
+    trainings, positives, negatives = datasets
+    drp_trainings = list(map(lambda df: df.drop(topics, axis=1), trainings))
+    drp_positives = list(map(lambda df: df.drop(topics, axis=1), positives))
+    drp_negatives = list(map(lambda df: df.drop(topics, axis=1), negatives))
+    if st:
+        drp_trainings = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_trainings))
+        drp_positives = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_positives))
+        drp_negatives = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_negatives))
+    return drp_trainings, drp_positives, drp_negatives
 
 # d = Datasets("data/real_panda/normal/","data/real_panda/test/")
 # print(d)

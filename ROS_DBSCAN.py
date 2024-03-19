@@ -63,6 +63,7 @@ def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
         min_group = Xdfs.shape[1] + 1
     if my_eps == 0:
         my_eps = find_eps(x_train=Xtrain, min_pnts=min_group)  # datasets[0] == trainings
+        my_eps += 0.0001
     Xtrain = Xtrain.to_numpy()
     Xtest = Xtest.to_numpy()
     eps_calibration = True
@@ -73,30 +74,6 @@ def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
         labels_ = DBSCAN(eps=my_eps, min_samples=min_group).fit_predict(Xtrain)
         predicts = labels_
         fp_labels = [i for i in labels_ if i < 0]
-        # predictions = []
-        # i_pred = []
-        # for i in range(0, len(predicts), 1):
-        #     if predicts[i] >= 0:
-        #         predictions.append(1)
-        #         i_pred.append(i)
-        #     else:
-        #         predictions.append(0)
-        #
-        # # calibration the eps (if needed)
-        # count = 0
-        # trainings, positives, negatives = datasets
-        # new_trainings_predicts = []
-        # for train in trainings:
-        #     predicts = predictions[count:train.shape[0]+count]
-        #     new_trainings_predicts.append(predicts)
-        #     count += train.shape[0]
-        # longests = []
-        # for y_pred in new_trainings_predicts:
-        #     longest = M.Measurements.longest_sequence(y_pred, Conf.NEGATIVE_LABEL)
-        #     longests.append(longest)
-        # longests.sort()
-        # print(longests)
-        # if(len([i for i in longests if i>7]) > len(longests) * 0.15):
         if len(fp_labels)/len(labels_) > 0.1:
             my_eps += 0.04
         else:

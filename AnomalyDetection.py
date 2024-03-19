@@ -9,7 +9,7 @@ import Measurements as M
 import numpy as np
 from scipy.spatial.distance import cdist
 from operator import itemgetter
-
+import re
 
 
 def removes_nan(datasets):
@@ -54,20 +54,6 @@ def most_influence_feature_by_pca(datasets, n=25):
     return most_important_names
 
 
-def topic_drop(datasets, topics=None, st=None):
-    if topics is None:
-        topics = []
-    trainings, positives, negatives = datasets
-    drp_trainings = list(map(lambda df: df.drop(topics, axis=1), trainings))
-    drp_positives = list(map(lambda df: df.drop(topics, axis=1), positives))
-    drp_negatives = list(map(lambda df: df.drop(topics, axis=1), negatives))
-    if st:
-        drp_trainings = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_trainings))
-        drp_positives = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_positives))
-        drp_negatives = list(map(lambda df: df.drop(list(df.filter(regex=st)), axis=1), drp_negatives))
-    return drp_trainings, drp_positives, drp_negatives
-
-
 def topics_filter(datasets, topics=None):
     if topics is None:
         topics = []
@@ -86,6 +72,19 @@ def panda_mic_topics():
         for i in range(1, 3):
             panda_topics.append('panda_finger_joint' + str(i) + ' ' + epv)
     return panda_topics
+
+
+def get_topics(exp):
+    if "panda" in exp:
+        topics = []
+        for epv in ['effort', 'position', 'velocity']:
+            for i in range(1, 8):
+                topics.append('panda_joint' + str(i) + ' ' + epv)
+            for i in range(1, 3):
+                topics.append('panda_finger_joint' + str(i) + ' ' + epv)
+    else:
+        topics = ['linear velocity x', 'linear velocity y', 'angular velocity z']
+    return topics
 
 
 def turtlebot3_mic_topics():
@@ -165,17 +164,21 @@ def sum_result(dict):
     for key in dict.keys():
         if tmp not in key:
             if not count == 0:
+                if 'type' in tmp:
+                    tmp = 'normal '
                 print(tmp)
-                print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+                print("number of runs detected as anomaly: " + str(anomaly_count) + " from " + str(count))
                 lst.append(anomaly_count/count)
             count = 0
             anomaly_count = 0
-            tmp = key[:-6]
+            tmp = key.split('\\')[1]
         count += 1
         if dict[key] > 0:
             anomaly_count += 1
+    if 'type' in tmp:
+        tmp = 'normal '
     print(tmp)
-    print("number of anomaly: " + str(anomaly_count) + " from " + str(count))
+    print("number of runs detected as anomaly: " + str(anomaly_count) + " from " + str(count))
     lst.append(anomaly_count / count)
     return lst
 
@@ -185,13 +188,13 @@ def my_DBSCAN(d):
     df = pd.DataFrame()
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    mic_topics = panda_mic_topics()
-    # mic_topics = turtlebot3_mic_topics()
+    # mic_topics = panda_mic_topics()
+    mic_topics = turtlebot3_mic_topics()
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     norm_flt_mic_dfs = normalization(flt_mic_dfs)
-    dfs, n_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
-    d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+    dfs, p_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
+    d.set_predictions(p_dfs[0], p_dfs[1], p_dfs[2])
     # print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
@@ -204,12 +207,12 @@ def my_DBSCAN(d):
     # Macro Anomaly Detection
     print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
     mac_dfs = d.get_copied_datasets()
-    d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+    d_mac_dfs = DS.drop_topics(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
     mac_topics = most_influence_feature_by_pca(n_d_mac_dfs, n=27)
     flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
-    dfs, n_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
-    d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
+    dfs, p_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
+    d.set_predictions(p_dfs[0], p_dfs[1], p_dfs[2])
     # print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
@@ -241,7 +244,7 @@ def get_mac_df(d):
     mic_topics = panda_mic_topics()
     # mic_topics = turtlebot3_mic_topics()
     mac_dfs = d.get_copied_datasets()
-    d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+    d_mac_dfs = DS.drop_topics(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
     mac_topics = most_influence_feature_by_pca(n_d_mac_dfs, n=27)
     flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
@@ -272,7 +275,7 @@ def my_AEAD(d):
     # Macro Anomaly Detection
     print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
     mac_dfs = d.get_copied_datasets()
-    d_mac_dfs = topic_drop(mac_dfs, mic_topics, 'Active')
+    d_mac_dfs = DS.drop_topics(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
     mac_topics = most_influence_feature_by_pca(n_d_mac_dfs, n=27)
     flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
@@ -380,36 +383,8 @@ def david_ks(d):
 
 
 
-scenario = 'real_turtlebot3'
+scenario = 'sim_turtlebot3'
 d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.3)
-# my_DBSCAN(d)
+my_DBSCAN(d)
 # my_AEAD(d)
-david_ks(d)
-
-
-
-# def david_ks2(d):
-#     import kolmogorov_smirnov_David as ks
-#     # runs, all_runs = ks.load_directory(NORM_COUNTS_PATH, NORM_FILE_PREFIX)
-#     count_columns = d.find_columns_contains("Count")
-#     d.filter_by_columns(count_columns)
-#     runs = d.get_copied_datasets()
-#     normal_runs = [r.to_numpy() for r in runs[0]]
-#     all_normal_runs = np.concatenate([np.reshape(r, -1) for r in normal_runs])
-#     normal_test_runs = [r.to_numpy() for r in runs[1]]
-#     anomaly_runs = [r.to_numpy() for r in runs[2]]
-#     all_anomaly_runs = np.concatenate([np.reshape(r, -1) for r in anomaly_runs])
-#     TITLE = 'Normal'
-#     # ks.plot_hist(normal_runs, TITLE)
-#
-#     ks_normal_normal = ks.ks_test(normal_runs)
-#     ks_normal_anomaly = ks.ks_test(anomaly_runs, all_normal_runs)
-#     ks_normal_test = ks.ks_test(normal_test_runs, all_normal_runs)
-#     TITLE_ANOMALY = 'MIX'
-#     files_names = d.get_names()
-#     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
-#     print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
-#     auroc, dict_results_mic = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
-#                                                   ks_norm_test=ks_normal_test, threshold_percent=0.95, title='ROC ' + TITLE_ANOMALY,
-#                                                   files_names=files_names)
-#     ks.AUROCs.append(auroc)
+# david_ks(d)
