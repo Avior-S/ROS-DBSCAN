@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py">
-      <change afterPath="$PROJECT_DIR$/ks.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MIX.png" beforeDir="false" afterPath="$PROJECT_DIR$/MIX.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ROC MIX.png" beforeDir="false" afterPath="$PROJECT_DIR$/ROC MIX.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ROS_DBSCAN.py" beforeDir="false" afterPath="$PROJECT_DIR$/ROS_DBSCAN.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/result.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/result.xlsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/x_ROC MIX.csv" beforeDir="false" afterPath="$PROJECT_DIR$/x_ROC MIX.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/y_ROC MIX.csv" beforeDir="false" afterPath="$PROJECT_DIR$/y_ROC MIX.csv" afterDir="false" />
-    </list>
+    <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -282,7 +271,23 @@
       <option name="project" value="LOCAL‎" />
       <updated>1708273927067</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL‎-00024" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1710871723777</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL‎-00024" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1710871723778</updated>
+    </task>
+    <task id="LOCAL‎-00025" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1710871748013</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL‎-00025" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1710871748013</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -347,7 +352,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test.py</url>
-          <line>222</line>
+          <line>216</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
       </breakpoints>
