@@ -89,7 +89,7 @@ def confusion_matrices(normal_counts_train,
 
 
 NFOLDS = 10
-print(f"{'experiment/anomaly':34s} | {'mean tpr':5s} | {'mean fpr':5s}")
+print(f"{'experiment/anomaly':34s} | {'mean tpr':8s} | {'mean fpr':8s}")
 print("-" * 50)
 for exp in EXPERIMENTS:
     normal_counts = dir_counts(normal_datadir(exp))

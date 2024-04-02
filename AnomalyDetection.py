@@ -1,4 +1,5 @@
 import Dataset as DS
+import Dataset2 as DS2
 import pandas as pd
 from sklearn.cluster import DBSCAN
 from sklearn.decomposition import PCA
@@ -200,7 +201,7 @@ def my_DBSCAN(d):
     trainings_names, positives_names, negatives_names = d.get_names()
     multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-    mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest)
+    mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, dict_preds={})
     print("summarize Result for Mic features:")
     df['mic'] = sum_result(mic_dict_preds)
 
@@ -228,6 +229,7 @@ def my_DBSCAN(d):
     print("\n\nUnion Result:")
     df['union'] = sum_result(mic_dict_preds)
     df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
+    return df['union']
 
 
 def get_mic_df(d):
@@ -256,19 +258,19 @@ def my_AEAD(d):
     df = pd.DataFrame()
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    # mic_topics = panda_mic_topics()
-    mic_topics = turtlebot3_mic_topics()
+    mic_topics = panda_mic_topics()
+    # mic_topics = turtlebot3_mic_topics()
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     norm_flt_mic_dfs = normalization(flt_mic_dfs)
-    dfs, n_dfs = AEAD.AEAD(norm_flt_mic_dfs, feat=3)
+    dfs, n_dfs = AEAD.AEAD(norm_flt_mic_dfs, feat=27) # In panda scenario feat = 27, in turtlebot3 feat = 3
     d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
     print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
     multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-    mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest)
+    mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, dict_preds={})
     print("summarize Result for Mic features:")
     df['mic'] = sum_result(mic_dict_preds)
 
@@ -298,6 +300,7 @@ def my_AEAD(d):
     print("\n\nUnion Result:")
     df['union'] = sum_result(mic_dict_preds)
     df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
+    return df['union']
 
 
 def my_ks(d):
@@ -383,8 +386,20 @@ def david_ks(d):
 
 
 
-scenario = 'sim_turtlebot3'
-d = DS.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.3)
-my_DBSCAN(d)
-# my_AEAD(d)
+scenario = 'sim_panda'
+NFOLDS = 10
+for i in range(NFOLDS):
+    print("-----------------------------------------------------------------------")
+    print("----------------------------   i = "+str(i)+"   --------------------------------")
+    print("-----------------------------------------------------------------------")
+    d = DS2.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.0, nfolds=NFOLDS, i=i)
+    # result = my_DBSCAN(d)
+    result = my_AEAD(d)
+    if i == 0:
+        avg = result
+    else:
+        avg +=result
+print(avg/NFOLDS)
+
+#my_AEAD(d)
 # david_ks(d)

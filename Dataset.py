@@ -11,14 +11,19 @@ COLOMUNS_INDEX = 1
 DataPred = namedtuple("DataPred", "paths datasets predictions")
 class Datasets:
 
-    def __init__(self, positives_dir_path, negatives_dir_path, test_size=0.3, delete=0):
+    def __init__(self, positives_dir_path, negatives_dir_path, test_size=0.3, delete=0, nfolds=0, i=-1):
 
         # The files will be inside two directory, 1 for "normal" and 2 for the type of the normal run
         positives_paths = []
         trainings_paths = []
         for pos_dir_path in self.get_dirs_names(positives_dir_path):
             files = Datasets.get_files_name(pos_dir_path)
-            trainings_files, positives_files = Datasets.__test_split(files, test_size)
+            if nfolds == 0:
+                trainings_files, positives_files = Datasets.__test_split(files, test_size)
+            else:
+                fold_size = len(files) // nfolds
+                trainings_files = files[:i * fold_size] + files[(i + 1) * fold_size:]
+                positives_files = files[i * fold_size:(i + 1) * fold_size]
             positives_paths.extend(positives_files)
             trainings_paths.extend(trainings_files)
 
