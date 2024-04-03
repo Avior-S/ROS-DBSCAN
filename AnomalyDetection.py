@@ -65,17 +65,7 @@ def topics_filter(datasets, topics=None):
     return flt_training, flt_positive, flt_negative
 
 
-def panda_mic_topics():
-    panda_topics = []
-    for epv in ['effort', 'position', 'velocity']:
-        for i in range(1, 8):
-            panda_topics.append('panda_joint' + str(i) + ' ' + epv)
-        for i in range(1, 3):
-            panda_topics.append('panda_finger_joint' + str(i) + ' ' + epv)
-    return panda_topics
-
-
-def get_topics(exp):
+def get_mic_topics(exp):
     if "panda" in exp:
         topics = []
         for epv in ['effort', 'position', 'velocity']:
@@ -86,10 +76,6 @@ def get_topics(exp):
     else:
         topics = ['linear velocity x', 'linear velocity y', 'angular velocity z']
     return topics
-
-
-def turtlebot3_mic_topics():
-    return ['linear velocity x', 'linear velocity y', 'angular velocity z']
 
 
 def find_max_longest_sequence(trainings_names, trainings_preds, alpha=0.95):
@@ -189,8 +175,7 @@ def my_DBSCAN(d):
     df = pd.DataFrame()
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    # mic_topics = panda_mic_topics()
-    mic_topics = turtlebot3_mic_topics()
+    mic_topics = get_mic_topics(scenario)
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     norm_flt_mic_dfs = normalization(flt_mic_dfs)
@@ -235,16 +220,14 @@ def my_DBSCAN(d):
 def get_mic_df(d):
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    mic_topics = panda_mic_topics()
-    # mic_topics = turtlebot3_mic_topics()
+    mic_topics = get_mic_topics(scenario)
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     return normalization(flt_mic_dfs)
 
 
 def get_mac_df(d):
-    mic_topics = panda_mic_topics()
-    # mic_topics = turtlebot3_mic_topics()
+    mic_topics = get_mic_topics(scenario)
     mac_dfs = d.get_copied_datasets()
     d_mac_dfs = DS.drop_topics(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
@@ -258,12 +241,15 @@ def my_AEAD(d):
     df = pd.DataFrame()
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
-    mic_topics = panda_mic_topics()
-    # mic_topics = turtlebot3_mic_topics()
+    mic_topics = get_mic_topics(scenario)
     mic_dfs = d.get_copied_datasets()
     flt_mic_dfs = topics_filter(mic_dfs, mic_topics)
     norm_flt_mic_dfs = normalization(flt_mic_dfs)
-    dfs, n_dfs = AEAD.AEAD(norm_flt_mic_dfs, feat=27) # In panda scenario feat = 27, in turtlebot3 feat = 3
+    if "panda" in scenario:
+        feat = 27
+    else:
+        feat = 3
+    dfs, n_dfs = AEAD.AEAD(norm_flt_mic_dfs, feat=feat) # In panda scenario feat = 27, in turtlebot3 feat = 3
     d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
     print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
@@ -386,7 +372,7 @@ def david_ks(d):
 
 
 
-scenario = 'sim_panda'
+scenario = 'sim_turtlebot3'
 NFOLDS = 10
 for i in range(NFOLDS):
     print("-----------------------------------------------------------------------")
@@ -396,10 +382,19 @@ for i in range(NFOLDS):
     # result = my_DBSCAN(d)
     result = my_AEAD(d)
     if i == 0:
-        avg = result
+        s_result = result
+        s2_result = result*result
     else:
-        avg +=result
-print(avg/NFOLDS)
+        s_result += result
+        s2_result += result*result
+
+avg = s_result / NFOLDS
+std = np.sqrt(s2_result / NFOLDS - avg * avg) * NFOLDS / (NFOLDS - 1)
+print("average:")
+print(avg)
+print("std:")
+print(std)
+
 
 #my_AEAD(d)
 # david_ks(d)

@@ -7,9 +7,7 @@
     <list default="true" id="a0b1f19a-a092-40be-890a-ff248a5f6a63" name="Changes" comment="with basic DBSCAN.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetection.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/Dataset.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kolmogorov_smirnov.py" beforeDir="false" afterPath="$PROJECT_DIR$/kolmogorov_smirnov.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kolmogorov_smirnov_old.py" beforeDir="false" afterPath="$PROJECT_DIR$/kolmogorov_smirnov_old.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/result.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/result.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -310,7 +308,15 @@
       <option name="project" value="LOCAL‎" />
       <updated>1711647631903</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL‎-00028" summary="with basic DBSCAN.py">
+      <option name="closed" value="true" />
+      <created>1712087482261</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL‎-00028" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1712087482262</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -360,18 +366,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/AnomalyDetection.py</url>
-          <line>397</line>
-          <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ROS_AEAD.py</url>
-          <line>74</line>
-          <option name="timeStamp" value="116" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ROS_AEAD.py</url>
-          <line>53</line>
-          <option name="timeStamp" value="117" />
+          <line>390</line>
+          <option name="timeStamp" value="119" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

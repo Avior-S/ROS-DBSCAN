@@ -89,7 +89,7 @@ def confusion_matrices(normal_counts_train,
 
 
 NFOLDS = 10
-print(f"{'experiment/anomaly':34s} | {'mean tpr':8s} | {'mean fpr':8s}")
+print(f"{'experiment/anomaly':34s} | {'mean tpr':8s} | {'std tpr':8s}")
 print("-" * 50)
 for exp in EXPERIMENTS:
     normal_counts = dir_counts(normal_datadir(exp))
@@ -98,7 +98,9 @@ for exp in EXPERIMENTS:
     for abname, abpath in abnormal_datadirs(exp):
         abnormal_counts = dir_counts(abpath)
         sum_tpr = 0
+        s2_tpr = 0
         sum_fpr = 0
+        s2_fpr = 0
         for i in range(NFOLDS):
             normal_counts_train = normal_counts[:i * fold_size] + normal_counts[(i + 1) * fold_size:]
             normal_counts_test = normal_counts[i*fold_size:(i+1)*fold_size]
@@ -109,7 +111,13 @@ for exp in EXPERIMENTS:
             fpr = cs[:, 0, 1] / (cs[:, 0, 0] + cs[:, 0, 1])
             auc = np.trapz(tpr, fpr)
             sum_tpr += tpr
+            s2_tpr += tpr * tpr
             sum_fpr += fpr
+            s2_fpr += fpr * fpr
         mean_tpr = sum_tpr / NFOLDS
+        std_tpr = np.sqrt(s2_tpr / NFOLDS - mean_tpr * mean_tpr) * NFOLDS / (NFOLDS - 1)
         mean_fpr = sum_fpr / NFOLDS
-        print(f"{exp + '/' + abname:34s} | {mean_tpr[0]:.3f} | {mean_fpr[0]:.3f}")
+        std_fpr = np.sqrt(s2_fpr / NFOLDS - mean_fpr * mean_fpr) * NFOLDS / (NFOLDS - 1)
+        print(f"{exp + '/' + abname:34s} | {mean_tpr[0]:.3f} | {std_tpr[0]:.3f}")
+    print("false positive rate:")
+    print(f"{exp + '/false positive':34s} | {mean_fpr[0]:.3f} | {std_fpr[0]:.3f}")
