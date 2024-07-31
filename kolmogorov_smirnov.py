@@ -79,6 +79,10 @@ def confusion_matrices(normal_counts_train,
     normal_ks_test = ks_statistics_of_runs(normal_counts_test, baseline)
     abnormal_ks_test = ks_statistics_of_runs(abnormal_counts_test, baseline)
 
+    # just for debug
+
+    print([abnormal_ks_test < threshold])
+
     cs = []
     c = np.array(
         [[sum(normal_ks_test < threshold), sum(normal_ks_test >= threshold)],
@@ -110,6 +114,7 @@ for exp in EXPERIMENTS:
             tpr = cs[:, 1, 1] / (cs[:, 1, 0] + cs[:, 1, 1])
             fpr = cs[:, 0, 1] / (cs[:, 0, 0] + cs[:, 0, 1])
             auc = np.trapz(tpr, fpr)
+            # print(tpr)
             sum_tpr += tpr
             s2_tpr += tpr * tpr
             sum_fpr += fpr

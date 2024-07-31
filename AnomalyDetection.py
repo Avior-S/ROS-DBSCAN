@@ -372,15 +372,15 @@ def david_ks(d):
 
 
 
-scenario = 'sim_turtlebot3'
+scenario = 'real_panda'
 NFOLDS = 10
 for i in range(NFOLDS):
     print("-----------------------------------------------------------------------")
     print("----------------------------   i = "+str(i)+"   --------------------------------")
     print("-----------------------------------------------------------------------")
     d = DS2.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.0, nfolds=NFOLDS, i=i)
-    # result = my_DBSCAN(d)
-    result = my_AEAD(d)
+    result = my_DBSCAN(d)
+    # result = my_AEAD(d)
     if i == 0:
         s_result = result
         s2_result = result*result
