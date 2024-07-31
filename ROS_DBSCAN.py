@@ -34,9 +34,9 @@ def find_eps(x_train, min_pnts):
     #                       online=True,
     #                       direction="increasing")  # parameter from figure
     # kneedle.plot_knee_normalized()
-    print(kneedle.elbow)
-    print(kneedle.knee_y)
-    kneedle.plot_knee()
+    ## print(kneedle.elbow)
+    ## print(kneedle.knee_y)
+    ## kneedle.plot_knee()
     return kneedle.knee_y
 
 
@@ -86,8 +86,8 @@ def run_dbscan_n_predict(datasets, my_eps=0, min_group=0):
             i_pred.append(i)
         else:
             predictions.append(0)
-    print("----------------------- EPS =     " + str(my_eps) + "    min group =    " + str(min_group) +
-          "  -----------------------")
+    ##print("----------------------- EPS =     " + str(my_eps) + "    min group =    " + str(min_group) +
+    ##      "  -----------------------")
     # update the datasets_preds
     pos_train = [Xtrain[i] for i in i_pred]
     if len(i_pred) < 1:

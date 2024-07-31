@@ -85,8 +85,8 @@ def find_max_longest_sequence(trainings_names, trainings_preds, alpha=0.95):
         longests.append(longest)
     longests.sort()
     max_longest = longests[int(round(len(longests) * alpha)) - 1]
-    print(longests)
-    print("max:    " + str(max_longest))
+    ## print(longests)
+    ## print("max:    " + str(max_longest))
     return max_longest
 
 
@@ -125,7 +125,7 @@ def predictions_information(datasets_preds):
     trainings_names, positives_names, negatives_names = datasets_preds.get_names()
     ans = ""
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
-    print("max threshold " + str(max_longest))
+    ## print("max threshold " + str(max_longest))
     ans += get_acc_info("training sets", zip(trainings_names, trainings_preds), Conf.POSITIVE_LABEL, max_longest) + "\n"
     ans += get_acc_info("positive sets", zip(positives_names, positives_preds), Conf.POSITIVE_LABEL, max_longest) + "\n"
     ans += get_acc_info("negative sets", zip(negatives_names, negatives_preds), Conf.POSITIVE_LABEL, max_longest) + "\n"
@@ -153,8 +153,8 @@ def sum_result(dict):
             if not count == 0:
                 if 'type' in tmp:
                     tmp = 'normal '
-                print(tmp)
-                print("number of runs detected as anomaly: " + str(anomaly_count) + " from " + str(count))
+                ## print(tmp)
+                ## print("number of runs detected as anomaly: " + str(anomaly_count) + " from " + str(count))
                 lst.append(anomaly_count/count)
             count = 0
             anomaly_count = 0
@@ -164,8 +164,8 @@ def sum_result(dict):
             anomaly_count += 1
     if 'type' in tmp:
         tmp = 'normal '
-    print(tmp)
-    print("number of runs detected as anomaly: " + str(anomaly_count) + " from " + str(count))
+    ## print(tmp)
+    ## print("number of runs detected as anomaly: " + str(anomaly_count) + " from " + str(count))
     lst.append(anomaly_count / count)
     return lst
 
@@ -181,17 +181,17 @@ def my_DBSCAN(d):
     norm_flt_mic_dfs = normalization(flt_mic_dfs)
     dfs, p_dfs = run_dbscan_n_predict(norm_flt_mic_dfs)
     d.set_predictions(p_dfs[0], p_dfs[1], p_dfs[2])
-    # print(predictions_information(d))
+    # ## print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
     multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
     mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, dict_preds={})
-    print("summarize Result for Mic features:")
+    ## print("summarize Result for Mic features:")
     df['mic'] = sum_result(mic_dict_preds)
 
     # Macro Anomaly Detection
-    print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
+    ## print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
     mac_dfs = d.get_copied_datasets()
     d_mac_dfs = DS.drop_topics(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
@@ -199,22 +199,22 @@ def my_DBSCAN(d):
     flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
     dfs, p_dfs = run_dbscan_n_predict(flt_n_d_mac_dfs)
     d.set_predictions(p_dfs[0], p_dfs[1], p_dfs[2])
-    # print(predictions_information(d))
+    # ## print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
     multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
     mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
-    print("summarize Result for Macro features:")
+    ## print("summarize Result for Macro features:")
     df['mac'] = sum_result(mac_dict_preds)
 
     for key in mic_dict_preds.keys():
         mic_dict_preds[key] += mac_dict_preds[key]
 
-    print("\n\nUnion Result:")
+    ## print("\n\nUnion Result:")
     df['union'] = sum_result(mic_dict_preds)
-    df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
-    return df['union']
+    # df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
+    return df
 
 
 def get_mic_df(d):
@@ -251,17 +251,17 @@ def my_AEAD(d):
         feat = 3
     dfs, n_dfs = AEAD.AEAD(norm_flt_mic_dfs, feat=feat) # In panda scenario feat = 27, in turtlebot3 feat = 3
     d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
-    print(predictions_information(d))
+    ## print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
     multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
     mic_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, dict_preds={})
-    print("summarize Result for Mic features:")
+    ## print("summarize Result for Mic features:")
     df['mic'] = sum_result(mic_dict_preds)
 
     # Macro Anomaly Detection
-    print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
+    ## print("\n\n ------------------------------ PCA ------------------------------------ \n\n")
     mac_dfs = d.get_copied_datasets()
     d_mac_dfs = DS.drop_topics(mac_dfs, mic_topics, 'Active')
     n_d_mac_dfs = normalization(d_mac_dfs)
@@ -269,7 +269,7 @@ def my_AEAD(d):
     flt_n_d_mac_dfs = topics_filter(n_d_mac_dfs, mac_topics)
     dfs, n_dfs = AEAD.AEAD(flt_n_d_mac_dfs)
     d.set_predictions(n_dfs[0], n_dfs[1], n_dfs[2])
-    print(predictions_information(d))
+    ## print(predictions_information(d))
     trainings_preds, positives_preds, negatives_preds = d.get_predictions()
     trainings_names, positives_names, negatives_names = d.get_names()
     multi_paths_preds = [zip(positives_names, positives_preds), zip(negatives_names, negatives_preds)]
@@ -277,13 +277,13 @@ def my_AEAD(d):
     #                      zip(negatives_names, negatives_preds)]
     max_longest = find_max_longest_sequence(trainings_names, trainings_preds)
     mac_dict_preds = dict_sum_preds(multi_paths_preds, max_longest, {})
-    print("summarize Result for Macro features:")
+    ## print("summarize Result for Macro features:")
     df['mac'] = sum_result(mac_dict_preds)
 
     for key in mic_dict_preds.keys():
         mic_dict_preds[key] += mac_dict_preds[key]
 
-    print("\n\nUnion Result:")
+    ## print("\n\nUnion Result:")
     df['union'] = sum_result(mic_dict_preds)
     df.to_excel('C:\\Users\Avior\PycharmProjects\ROS-DBSCAN\\result.xlsx')
     return df['union']
@@ -308,11 +308,11 @@ def my_ks(d):
     TITLE_ANOMALY = 'MIX'
     files_names = d.get_names()
     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
-    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    ## print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
     auroc, dict_results_mic = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
                              ks_norm_test=ks_normal_test ,title='ROC ' + TITLE_ANOMALY, files_names=files_names)
     ks.AUROCs.append(auroc)
-    print("-----------------      PCA       ------------------------")
+    ## print("-----------------      PCA       ------------------------")
     similar_columns = d.find_similar_columns_in_training()
     d.filter_by_columns(similar_columns)
     mac_df = get_mac_df(d)
@@ -332,7 +332,7 @@ def my_ks(d):
     TITLE_ANOMALY = 'MIX'
     files_names = d.get_names()
     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
-    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    ## print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
     auroc, dict_results_mac = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
                                 ks_norm_test=ks_normal_test, title='ROC ' + TITLE_ANOMALY, files_names=files_names)
     ks.AUROCs.append(auroc)
@@ -364,36 +364,37 @@ def david_ks(d):
     TITLE_ANOMALY = 'MIX'
     files_names = d.get_names()
     ks.plot_ks_test_results(ks_normal_normal, ks_normal_anomaly, ks_normal_test, TITLE_ANOMALY)
-    print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
+    ## print('Anomaly Max dist:', max(ks_normal_anomaly), ' Anomaly Min dist: ', min(ks_normal_anomaly))
     auroc, dict_results = ks.detect_anomalies(ks_norm_anomaly=ks_normal_anomaly, ks_norm_norm=ks_normal_normal,
                                                   ks_norm_test=ks_normal_test, threshold_percent=0.95, title='ROC ' + TITLE_ANOMALY,
                                                   files_names=files_names)
     ks.AUROCs.append(auroc)
 
 
+scenarios = ['real_panda', 'sim_panda', 'real_turtlebot3', 'sim_turtlebot3']
+for scenario in scenarios:
+    print("--------------------------   " + scenario + "   ---------------------------")
+    NFOLDS = 10
+    for i in range(NFOLDS):
+        ## print("-----------------------------------------------------------------------")
+        ## print("----------------------------   i = "+str(i)+"   --------------------------------")
+        ## print("-----------------------------------------------------------------------")
+        d = DS2.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.0, nfolds=NFOLDS, i=i)
+        result = my_DBSCAN(d)
+        # result = my_AEAD(d)
+        if i == 0:
+            s_result = result
+            s2_result = result*result
+        else:
+            s_result += result
+            s2_result += result*result
 
-scenario = 'real_panda'
-NFOLDS = 10
-for i in range(NFOLDS):
-    print("-----------------------------------------------------------------------")
-    print("----------------------------   i = "+str(i)+"   --------------------------------")
-    print("-----------------------------------------------------------------------")
-    d = DS2.Datasets("data/"+scenario+"/normal/", "data/"+scenario+"/abnormal/", test_size=0.0, nfolds=NFOLDS, i=i)
-    result = my_DBSCAN(d)
-    # result = my_AEAD(d)
-    if i == 0:
-        s_result = result
-        s2_result = result*result
-    else:
-        s_result += result
-        s2_result += result*result
-
-avg = s_result / NFOLDS
-std = np.sqrt(s2_result / NFOLDS - avg * avg) * NFOLDS / (NFOLDS - 1)
-print("average:")
-print(avg)
-print("std:")
-print(std)
+    avg = s_result / NFOLDS
+    std = np.sqrt(s2_result / NFOLDS - avg * avg) * NFOLDS / (NFOLDS - 1)
+    print("average:")
+    print(avg)
+    print("std:")
+    print(std)
 
 
 #my_AEAD(d)
